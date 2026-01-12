@@ -1,0 +1,21 @@
+{
+  "name": "vulnerable-web-app",
+  "version": "1.0.0",
+  "description": "A web application with intentional security vulnerabilities for educational purposes",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "echo \"No tests - this is a vulnerable demo app\" && exit 0"
+  },
+  "keywords": ["security", "vulnerabilities", "education", "demo"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "express": "4.17.1",
+    "body-parser": "1.19.0",
+    "sqlite3": "5.0.0",
+    "ejs": "2.7.4",
+    "lodash": "4.17.15",
+    "minimist": "1.2.5"
+  }
+}

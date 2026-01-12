@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>漏洞演示應用程式 - Vulnerable Web Application</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            padding: 30px;
+        }
+        
+        .warning {
+            background: #ff4444;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+        }
+        
+        .vulnerability-section {
+            background: #f5f5f5;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        
+        .vulnerability-section h2 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        .vulnerability-section p {
+            color: #666;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+        
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        input[type="text"],
+        input[type="password"],
+        textarea {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        
+        button:hover {
+            background: #5568d3;
+        }
+        
+        .exploit-hint {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+            font-size: 13px;
+        }
+        
+        .exploit-hint strong {
+            color: #856404;
+        }
+        
+        .code {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            overflow-x: auto;
+            margin-top: 10px;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="warning">
+            ⚠️ 警告：這是一個包含故意安全漏洞的演示應用程式 | WARNING: This application contains intentional security vulnerabilities!
+            <br>僅供教育用途 - 請勿部署到生產環境 | For educational purposes only - DO NOT deploy to production!
+        </div>
+        
+        <h1>🔓 漏洞演示應用程式</h1>
+        <p class="subtitle">Vulnerable Web Application - Security Training Platform</p>
+        
+        <div class="grid">
+            <!-- Vulnerability 1 & 2: SQL Injection -->
+            <div class="vulnerability-section">
+                <h2>🔓 1. SQL 注入攻擊 (SQL Injection)</h2>
+                <p>此登入表單容易受到 SQL 注入攻擊。攻擊者可以繞過身份驗證或提取敏感數據。</p>
+                <form action="/login" method="POST">
+                    <input type="text" name="username" placeholder="用戶名 (Username)" required>
+                    <input type="password" name="password" placeholder="密碼 (Password)" required>
+                    <button type="submit">登入 (Login)</button>
+                </form>
+                <div class="exploit-hint">
+                    <strong>嘗試漏洞利用 (Try exploiting):</strong>
+                    <div class="code">Username: admin' OR '1'='1<br>Password: anything</div>
+                    <div class="code">Username: ' OR 1=1 --<br>Password: anything</div>
+                </div>
+            </div>
+            
+            <!-- Vulnerability 3: SQL Injection in Search -->
+            <div class="vulnerability-section">
+                <h2>🔍 2. SQL 注入 - 搜尋功能 (SQL Injection - Search)</h2>
+                <p>搜尋功能也存在 SQL 注入漏洞，可以用來提取數據庫信息。</p>
+                <form action="/search" method="POST">
+                    <input type="text" name="search" placeholder="搜尋產品 (Search products)" required>
+                    <button type="submit">搜尋 (Search)</button>
+                </form>
+                <div class="exploit-hint">
+                    <strong>嘗試漏洞利用:</strong>
+                    <div class="code">Search: ' UNION SELECT username, password, email FROM users --</div>
+                </div>
+            </div>
+            
+            <!-- Vulnerability 4: XSS -->
+            <div class="vulnerability-section">
+                <h2>💉 3. 跨站腳本攻擊 (Cross-Site Scripting - XSS)</h2>
+                <p>評論功能不會過濾用戶輸入，允許注入惡意 JavaScript 代碼。</p>
+                <form action="/comment" method="POST">
+                    <textarea name="comment" placeholder="輸入評論 (Enter comment)" required></textarea>
+                    <button type="submit">提交評論 (Submit Comment)</button>
+                </form>
+                <div class="exploit-hint">
+                    <strong>嘗試漏洞利用:</strong>
+                    <div class="code">&lt;script&gt;alert('XSS Attack!')&lt;/script&gt;</div>
+                    <div class="code">&lt;img src=x onerror="alert('XSS')"&gt;</div>
+                </div>
+            </div>
+            
+            <!-- Vulnerability 5: Command Injection -->
+            <div class="vulnerability-section">
+                <h2>⚡ 4. 命令注入 (Command Injection)</h2>
+                <p>Ping 功能直接執行用戶輸入的命令，允許執行任意系統命令。</p>
+                <form action="/ping" method="POST">
+                    <input type="text" name="host" placeholder="輸入主機名或IP (Enter hostname or IP)" required>
+                    <button type="submit">Ping</button>
+                </form>
+                <div class="exploit-hint">
+                    <strong>嘗試漏洞利用:</strong>
+                    <div class="code">127.0.0.1; ls -la</div>
+                    <div class="code">127.0.0.1 && cat /etc/passwd</div>
+                    <div class="code">127.0.0.1 | whoami</div>
+                </div>
+            </div>
+            
+            <!-- Vulnerability 6: Path Traversal -->
+            <div class="vulnerability-section">
+                <h2>📁 5. 路徑遍歷 (Path Traversal)</h2>
+                <p>文件讀取功能沒有驗證路徑，允許訪問系統中的任意文件。</p>
+                <form action="/file" method="GET">
+                    <input type="text" name="filename" placeholder="輸入文件名 (Enter filename)" required>
+                    <button type="submit">讀取文件 (Read File)</button>
+                </form>
+                <div class="exploit-hint">
+                    <strong>嘗試漏洞利用:</strong>
+                    <div class="code">../server.js</div>
+                    <div class="code">../../package.json</div>
+                    <div class="code">../../../etc/passwd</div>
+                </div>
+            </div>
+            
+            <!-- Vulnerability 7: Insecure Direct Object Reference -->
+            <div class="vulnerability-section">
+                <h2>🔑 6. 不安全的直接對象引用 (IDOR)</h2>
+                <p>可以通過修改 URL 中的用戶 ID 來訪問其他用戶的敏感信息。</p>
+                <p>嘗試訪問：
+                    <a href="/user/1" target="_blank">/user/1</a>,
+                    <a href="/user/2" target="_blank">/user/2</a>,
+                    <a href="/user/3" target="_blank">/user/3</a>
+                </p>
+                <div class="exploit-hint">
+                    <strong>說明:</strong> 沒有授權檢查，任何人都可以訪問任何用戶的完整信息，包括密碼和信用卡號。
+                </div>
+            </div>
+            
+            <!-- Vulnerability 8: Missing Authentication -->
+            <div class="vulnerability-section">
+                <h2>🚪 7. 缺少身份驗證 (Missing Authentication)</h2>
+                <p>管理員面板沒有任何身份驗證機制，任何人都可以訪問敏感信息。</p>
+                <p><a href="/admin" target="_blank">訪問管理員面板 (Access Admin Panel)</a></p>
+                <div class="exploit-hint">
+                    <strong>說明:</strong> 管理面板暴露了所有 API 金鑰和密碼，且沒有任何訪問控制。
+                </div>
+            </div>
+            
+            <!-- Vulnerability 9: Eval / Code Injection -->
+            <div class="vulnerability-section">
+                <h2>💻 8. 代碼注入 (Code Injection - eval)</h2>
+                <p>計算器功能使用 eval() 執行用戶輸入，允許執行任意 JavaScript 代碼。</p>
+                <form action="/calculate" method="POST">
+                    <input type="text" name="expression" placeholder="輸入數學表達式 (Enter math expression)" required>
+                    <button type="submit">計算 (Calculate)</button>
+                </form>
+                <div class="exploit-hint">
+                    <strong>嘗試漏洞利用:</strong>
+                    <div class="code">2+2</div>
+                    <div class="code">process.version</div>
+                    <div class="code">require('fs').readdirSync('.')</div>
+                </div>
+            </div>
+            
+            <!-- Vulnerability 10: Hardcoded Credentials -->
+            <div class="vulnerability-section">
+                <h2>🔐 9. 硬編碼憑證 (Hardcoded Credentials)</h2>
+                <p>應用程式源代碼中包含硬編碼的 API 金鑰、密碼和敏感憑證。</p>
+                <div class="exploit-hint">
+                    <strong>查看 server.js 文件可以找到：</strong>
+                    <div class="code">
+                        - API Keys (API 金鑰)<br>
+                        - Database Passwords (數據庫密碼)<br>
+                        - AWS Credentials (AWS 憑證)<br>
+                        - Secret Tokens (秘密令牌)
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Vulnerability 11: Vulnerable Dependencies -->
+            <div class="vulnerability-section">
+                <h2>📦 10. 易受攻擊的依賴項 (Vulnerable Dependencies)</h2>
+                <p>應用程式使用已知存在安全漏洞的過時依賴項。</p>
+                <div class="exploit-hint">
+                    <strong>檢查易受攻擊的依賴項:</strong>
+                    <div class="code">
+                        npm audit<br>
+                        或查看 package.json 中的舊版本依賴
+                    </div>
+                    <strong>包含的易受攻擊依賴項：</strong>
+                    <div class="code">
+                        - lodash 4.17.15 (Prototype Pollution)<br>
+                        - minimist 1.2.5 (Prototype Pollution)<br>
+                        - ejs 2.7.4 (Template Injection)<br>
+                        - 其他過時的依賴項
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="vulnerability-section" style="margin-top: 30px; background: #e8f5e9;">
+            <h2>📚 學習資源</h2>
+            <p><strong>這個應用程式展示了以下常見的安全漏洞：</strong></p>
+            <ul style="margin-left: 20px; line-height: 2;">
+                <li>SQL 注入 (SQL Injection)</li>
+                <li>跨站腳本攻擊 (XSS - Cross-Site Scripting)</li>
+                <li>命令注入 (Command Injection)</li>
+                <li>路徑遍歷 (Path Traversal)</li>
+                <li>不安全的直接對象引用 (IDOR - Insecure Direct Object Reference)</li>
+                <li>缺少身份驗證 (Missing Authentication)</li>
+                <li>代碼注入 (Code Injection)</li>
+                <li>敏感數據暴露 (Sensitive Data Exposure)</li>
+                <li>硬編碼憑證 (Hardcoded Credentials)</li>
+                <li>使用存在已知漏洞的組件 (Using Components with Known Vulnerabilities)</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
